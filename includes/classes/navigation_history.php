@@ -1,11 +1,11 @@
 <?php
 /*
-  $Id: navigation_history.php,v 1.6 2003/06/09 22:23:43 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -27,7 +27,7 @@
 
       $set = 'true';
       for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
-        if ( ($this->path[$i]['page'] == basename($PHP_SELF)) ) {
+        if ($this->path[$i]['page'] == $PHP_SELF) {
           if (isset($cPath)) {
             if (!isset($this->path[$i]['get']['cPath'])) {
               continue;
@@ -58,10 +58,10 @@
       }
 
       if ($set == 'true') {
-        $this->path[] = array('page' => basename($PHP_SELF),
+        $this->path[] = array('page' => $PHP_SELF,
                               'mode' => $request_type,
-                              'get' => $HTTP_GET_VARS,
-                              'post' => $HTTP_POST_VARS);
+                              'get' => $this->filter_parameters($HTTP_GET_VARS),
+                              'post' => $this->filter_parameters($HTTP_POST_VARS));
       }
     }
 
@@ -69,7 +69,7 @@
       global $PHP_SELF;
 
       $last_entry_position = sizeof($this->path) - 1;
-      if ($this->path[$last_entry_position]['page'] == basename($PHP_SELF)) {
+      if ($this->path[$last_entry_position]['page'] == $PHP_SELF) {
         unset($this->path[$last_entry_position]);
       }
     }
@@ -80,13 +80,13 @@
       if (is_array($page)) {
         $this->snapshot = array('page' => $page['page'],
                                 'mode' => $page['mode'],
-                                'get' => $page['get'],
-                                'post' => $page['post']);
+                                'get' => $this->filter_parameters($page['get']),
+                                'post' => $this->filter_parameters($page['post']));
       } else {
-        $this->snapshot = array('page' => basename($PHP_SELF),
+        $this->snapshot = array('page' => $PHP_SELF,
                                 'mode' => $request_type,
-                                'get' => $HTTP_GET_VARS,
-                                'post' => $HTTP_POST_VARS);
+                                'get' => $this->filter_parameters($HTTP_GET_VARS),
+                                'post' => $this->filter_parameters($HTTP_POST_VARS));
       }
     }
 
@@ -109,19 +109,34 @@
           echo $key . '=' . $value . '&';
         }
         if (sizeof($this->path[$i]['post']) > 0) {
-          echo '<br>';
+          echo '<br />';
           while (list($key, $value) = each($this->path[$i]['post'])) {
-            echo '&nbsp;&nbsp;<b>' . $key . '=' . $value . '</b><br>';
+            echo '&nbsp;&nbsp;<strong>' . $key . '=' . $value . '</strong><br />';
           }
         }
-        echo '<br>';
+        echo '<br />';
       }
 
       if (sizeof($this->snapshot) > 0) {
-        echo '<br><br>';
+        echo '<br /><br />';
 
-        echo $this->snapshot['mode'] . ' ' . $this->snapshot['page'] . '?' . tep_array_to_string($this->snapshot['get'], array(tep_session_name())) . '<br>';
+        echo $this->snapshot['mode'] . ' ' . $this->snapshot['page'] . '?' . tep_array_to_string($this->snapshot['get'], array(tep_session_name())) . '<br />';
       }
+    }
+
+    function filter_parameters($parameters) {
+      $clean = array();
+
+      if (is_array($parameters)) {
+        reset($parameters);
+        while (list($key, $value) = each($parameters)) {
+          if (strpos($key, '_nh-dns') < 1) {
+            $clean[$key] = $value;
+          }
+        }
+      }
+
+      return $clean;
     }
 
     function unserialize($broken) {

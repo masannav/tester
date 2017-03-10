@@ -1,11 +1,11 @@
 <?php
 /*
-  $Id: split_page_results.php,v 1.13 2003/05/05 17:56:50 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2002 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -35,7 +35,7 @@
         $current_page_number = $num_pages;
       }
       $offset = ($max_rows_per_page * ($current_page_number - 1));
-      $sql_query .= " limit " . $offset . ", " . $max_rows_per_page;
+      $sql_query .= " limit " . max($offset, 0) . ", " . $max_rows_per_page;
     }
 
     function display_links($query_numrows, $max_rows_per_page, $max_page_links, $current_page_number, $parameters = '', $page_name = 'page') {
@@ -52,18 +52,18 @@
       }
 
       if ($num_pages > 1) {
-        $display_links = tep_draw_form('pages', basename($PHP_SELF), '', 'get');
+        $display_links = tep_draw_form('pages', $PHP_SELF, '', 'get');
 
         if ($current_page_number > 1) {
-          $display_links .= '<a href="' . tep_href_link(basename($PHP_SELF), $parameters . $page_name . '=' . ($current_page_number - 1), 'NONSSL') . '" class="splitPageLink">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
+          $display_links .= '<a href="' . tep_href_link($PHP_SELF, $parameters . $page_name . '=' . ($current_page_number - 1)) . '" class="splitPageLink">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
         } else {
           $display_links .= PREVNEXT_BUTTON_PREV . '&nbsp;&nbsp;';
         }
 
-        $display_links .= sprintf(TEXT_RESULT_PAGE, tep_draw_pull_down_menu($page_name, $pages_array, $current_page_number, 'onChange="this.form.submit();"'), $num_pages);
+        $display_links .= sprintf(TEXT_RESULT_PAGE, tep_draw_pull_down_menu($page_name, $pages_array, $current_page_number, 'onchange="this.form.submit();"'), $num_pages);
 
         if (($current_page_number < $num_pages) && ($num_pages != 1)) {
-          $display_links .= '&nbsp;&nbsp;<a href="' . tep_href_link(basename($PHP_SELF), $parameters . $page_name . '=' . ($current_page_number + 1), 'NONSSL') . '" class="splitPageLink">' . PREVNEXT_BUTTON_NEXT . '</a>';
+          $display_links .= '&nbsp;&nbsp;<a href="' . tep_href_link($PHP_SELF, $parameters . $page_name . '=' . ($current_page_number + 1)) . '" class="splitPageLink">' . PREVNEXT_BUTTON_NEXT . '</a>';
         } else {
           $display_links .= '&nbsp;&nbsp;' . PREVNEXT_BUTTON_NEXT;
         }
@@ -77,9 +77,7 @@
           }
         }
 
-        if (SID) $display_links .= tep_draw_hidden_field(tep_session_name(), tep_session_id());
-
-        $display_links .= '</form>';
+        $display_links .= tep_hide_session_id() . '</form>';
       } else {
         $display_links = sprintf(TEXT_RESULT_PAGE, $num_pages, $num_pages);
       }

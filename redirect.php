@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: redirect.php,v 1.10 2003/06/05 23:31:31 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
@@ -25,7 +25,10 @@
 
     case 'url':
       if (isset($HTTP_GET_VARS['goto']) && tep_not_null($HTTP_GET_VARS['goto'])) {
-        tep_redirect('http://' . $HTTP_GET_VARS['goto']);
+        $check_query = tep_db_query("select products_url from " . TABLE_PRODUCTS_DESCRIPTION . " where products_url = '" . tep_db_input($HTTP_GET_VARS['goto']) . "' limit 1");
+        if (tep_db_num_rows($check_query)) {
+          tep_redirect('http://' . $HTTP_GET_VARS['goto']);
+        }
       }
       break;
 

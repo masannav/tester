@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: email.php,v 1.12 2003/06/17 17:29:44 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
@@ -156,7 +156,7 @@
  */
 
     function add_html($html, $text = NULL, $images_dir = NULL) {
-      $this->html = tep_convert_linefeeds(array("\r\n", "\n", "\r"), '<br>', $html);
+      $this->html = tep_convert_linefeeds(array("\r\n", "\n", "\r"), '<br />', $html);
       $this->html_text = tep_convert_linefeeds(array("\r\n", "\n", "\r"), $this->lf, $text);
 
       if (isset($images_dir)) $this->find_html_images($images_dir);
@@ -471,6 +471,26 @@
  */
 
     function send($to_name, $to_addr, $from_name, $from_addr, $subject = '', $headers = '') {
+      if ((strstr($to_name, "\n") != false) || (strstr($to_name, "\r") != false)) {
+        return false;
+      }
+
+      if ((strstr($to_addr, "\n") != false) || (strstr($to_addr, "\r") != false)) {
+        return false;
+      }
+
+      if ((strstr($subject, "\n") != false) || (strstr($subject, "\r") != false)) {
+        return false;
+      }
+
+      if ((strstr($from_name, "\n") != false) || (strstr($from_name, "\r") != false)) {
+        return false;
+      }
+
+      if ((strstr($from_addr, "\n") != false) || (strstr($from_addr, "\r") != false)) {
+        return false;
+      }
+
       $to = (($to_name != '') ? '"' . $to_name . '" <' . $to_addr . '>' : $to_addr);
       $from = (($from_name != '') ? '"' . $from_name . '" <' . $from_addr . '>' : $from_addr);
 

@@ -1,11 +1,11 @@
 <?php
 /*
-  $Id: upload.php,v 1.2 2003/06/20 00:18:30 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -27,34 +27,26 @@
         if ( ($this->parse() == true) && ($this->save() == true) ) {
           return true;
         } else {
-// self destruct
-          $this = null;
-
           return false;
         }
       }
     }
 
     function parse() {
-      global $messageStack;
+      global $HTTP_POST_FILES, $messageStack;
+
+      $file = array();
 
       if (isset($_FILES[$this->file])) {
         $file = array('name' => $_FILES[$this->file]['name'],
                       'type' => $_FILES[$this->file]['type'],
                       'size' => $_FILES[$this->file]['size'],
                       'tmp_name' => $_FILES[$this->file]['tmp_name']);
-      } elseif (isset($GLOBALS['HTTP_POST_FILES'][$this->file])) {
-        global $HTTP_POST_FILES;
-
+      } elseif (isset($HTTP_POST_FILES[$this->file])) {
         $file = array('name' => $HTTP_POST_FILES[$this->file]['name'],
                       'type' => $HTTP_POST_FILES[$this->file]['type'],
                       'size' => $HTTP_POST_FILES[$this->file]['size'],
                       'tmp_name' => $HTTP_POST_FILES[$this->file]['tmp_name']);
-      } else {
-        $file = array('name' => (isset($GLOBALS[$this->file . '_name']) ? $GLOBALS[$this->file . '_name'] : ''),
-                      'type' => (isset($GLOBALS[$this->file . '_type']) ? $GLOBALS[$this->file . '_type'] : ''),
-                      'size' => (isset($GLOBALS[$this->file . '_size']) ? $GLOBALS[$this->file . '_size'] : ''),
-                      'tmp_name' => (isset($GLOBALS[$this->file]) ? $GLOBALS[$this->file] : ''));
       }
 
       if ( tep_not_null($file['tmp_name']) && ($file['tmp_name'] != 'none') && is_uploaded_file($file['tmp_name']) ) {
@@ -147,7 +139,7 @@
     function check_destination() {
       global $messageStack;
 
-      if (!is_writeable($this->destination)) {
+      if (!tep_is_writable($this->destination)) {
         if (is_dir($this->destination)) {
           if ($this->message_location == 'direct') {
             $messageStack->add(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');

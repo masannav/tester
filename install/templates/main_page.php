@@ -1,44 +1,49 @@
 <?php
 /*
-  $Id: main_page.php,v 1.4 2003/07/09 10:49:48 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE html>
 
 <html>
 
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>osCommerce, Open Source E-Commerce Solutions</title>
+<meta name="robots" content="noindex,nofollow" />
+<link rel="icon" type="image/png" href="images/oscommerce_icon.png" />
 
-<title>osCommerce :// Open Source E-Commerce Solutions</title>
+<link rel="stylesheet" type="text/css" href="../ext/jquery/ui/redmond/jquery-ui-1.10.4.min.css" />
+<script src="../ext/jquery/jquery-1.11.1.min.js"></script>
+<script src="../ext/jquery/ui/jquery-ui-1.10.4.min.js"></script>
 
-<meta name="ROBOTS" content="NOFOLLOW">
-
-<link rel="stylesheet" type="text/css" href="templates/main_page/stylesheet.css">
-
-<script language="javascript" src="templates/main_page/javascript.js"></script>
-
+<link rel="stylesheet" type="text/css" href="templates/main_page/stylesheet.css" />
 </head>
 
-<body text="#000000" bgcolor="#ffffff" leftmargin="0" topmargin="0" marginheight="0" marginwidth="0">
+<body>
 
-<?php require('templates/main_page/header.php'); ?>
+<div id="pageHeader">
+  <div>
+    <div style="float: right; padding-top: 40px; padding-right: 15px; color: #000000; font-weight: bold;"><a href="http://www.oscommerce.com" target="_blank">osCommerce Website</a> &nbsp;|&nbsp; <a href="http://www.oscommerce.com/support" target="_blank">Support</a> &nbsp;|&nbsp; <a href="http://www.oscommerce.info" target="_blank">Documentation</a></div>
 
-<table cellspacing="0" cellpadding="0" width="100%" border="0" align="center">
-  <tr>
-    <td width="5%" class="leftColumn" valign="top" background="images/layout/left_column_background.gif"><img src="images/layout/left_column_top.gif"></td>
-    <td width="85%" valign="top"><?php require('templates/pages/' . $page_contents); ?></td>
-    <td width="5%" class="rightColumn" valign="top"><img src="images/layout/right_column_upper_curve.gif" width="47"></td>
-  </tr>
-</table>
+    <a href="index.php"><img src="images/oscommerce.png" title="osCommerce Online Merchant" style="margin: 10px 10px 0 10px;" /></a>
+  </div>
+</div>
 
-<?php require('templates/main_page/footer.php'); ?>
+<div id="pageContent">
+<?php require('templates/pages/' . $page_contents); ?>
+</div>
+
+<div id="pageFooter">
+  <p>Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.oscommerce.com" target="_blank">osCommerce</a>. All rights reserved. osCommerce is a registered trademark of Harald Ponce de Leon.</p>
+</div>
 
 </body>
 
